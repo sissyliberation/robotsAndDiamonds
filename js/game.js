@@ -20,6 +20,14 @@ characterImage.onload = function () {
 };
 characterImage.src = "images/robot.png";
 
+// cpu image
+var cpuReady = false;
+var cpuImage = new Image();
+cpuImage.onload = function () {
+	cpuReady = true;
+};
+cpuImage.src = "images/cpu.png";
+
 // goal image
 var goalReady = false;
 var goalImage = new Image();
@@ -32,8 +40,13 @@ goalImage.src = "images/diamond.png";
 var character = {
 	speed: 256 // movement in pixels per second
 };
+
+var cpu = {
+	speed: 224 // movement in pixels per second
+};
 var goal = {};
 var sumGoals = 0;
+var cpuGoals = 0;
 
 // Handle keyboard controls
 var keysDown = {};
@@ -49,7 +62,10 @@ addEventListener("keyup", function (e) {
 // Places character in senter of canvas
 var start = function () {
 	character.x = canvas.width / 2;
-	character.y = canvas.height / 2;
+	character.y = 0;
+
+	cpu.x = canvas.width / 2;
+	cpu.y = canvas.height - 32;
 	reset();
 }
 
@@ -84,17 +100,22 @@ var update = function (modifier) {
 		++sumGoals;
 		reset();
 	}
-// 	var autonomous = function () {
-// 	if(character.y > goal.y)
-// 	character.y -= character.speed * modifier;
-// if(character.y < goal.y)
-// 	character.y += character.speed * modifier;
-// if(character.x > goal.x)
-// 	character.x -= character.speed * modifier;
-// if(character.x < goal.x)
-// 	character.x += character.speed * modifier;
-// };
-// autonomous();
+	if (cpu.x <= (goal.x + 32) && goal.x <= (cpu.x + 32)
+		&& cpu.y <= (goal.y + 32) && goal.y <= (cpu.y + 32)) {
+		++cpuGoals;
+		reset();
+	}
+	var autonomous = function () {
+		if(cpu.y > goal.y)
+			cpu.y -= cpu.speed * modifier;
+		if(cpu.y < goal.y)
+			cpu.y += cpu.speed * modifier;
+		if(cpu.x > goal.x)
+			cpu.x -= cpu.speed * modifier;
+		if(cpu.x < goal.x)
+			cpu.x += cpu.speed * modifier;
+	};
+	autonomous();
 
 };
 
@@ -112,6 +133,8 @@ var render = function () {
 		ctx.drawImage(bgImage, 0, 0);
 	if (characterReady) 
 		ctx.drawImage(characterImage, character.x, character.y);
+	if (cpuReady) 
+		ctx.drawImage(cpuImage, cpu.x, cpu.y);
 	if (goalReady) 
 		ctx.drawImage(goalImage, goal.x, goal.y);
 
@@ -120,7 +143,7 @@ var render = function () {
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Diamonds: " + sumGoals, 0, 0);
+	ctx.fillText("You: " + sumGoals+", CPU: "+cpuGoals, 0, 0);
 };
 
 // The main game loop
