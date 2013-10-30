@@ -42,7 +42,7 @@ var character = {
 };
 
 var cpu = {
-	speed: 224 // movement in pixels per second
+	speed: 196 // movement in pixels per second
 };
 var goal = {};
 var sumGoals = 0;
