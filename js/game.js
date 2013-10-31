@@ -1,8 +1,8 @@
 // Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth -32;
-canvas.height = window.innerHeight -32;
+canvas.width = window.innerWidth -20;
+canvas.height = window.innerHeight -20;
 document.body.appendChild(canvas);
 
 // Background image
@@ -40,13 +40,13 @@ goalImage.src = "images/diamond.png";
 var character = {
 	speed: 256 // movement in pixels per second
 };
-
 var cpu = {
 	speed: 196 // movement in pixels per second
 };
+
+// goals
 var goal = {};
-var sumGoals = 0;
-var cpuGoals = 0;
+var sumGoals = 0, cpuGoals = 0;
 
 // Handle keyboard controls
 var keysDown = {};
@@ -67,15 +67,12 @@ var start = function () {
 	cpu.x = canvas.width / 2;
 	cpu.y = canvas.height - 32;
 	reset();
-}
+};
 
 // New goal appears 
 var reset = function () {
-	if( sumGoals == 10 || cpuGoals == 10) {
-		window.clearInterval(begin);
-	}	
 	goal.x = 32 + (Math.random() * (canvas.width - 64));
-	goal.y = 32 + (Math.random() * (canvas.height - 64));
+	goal.y = 32 + (Math.random() * (canvas.height - 64));	
 };
 
 // Update game objects
@@ -119,12 +116,10 @@ var update = function (modifier) {
 			cpu.x += cpu.speed * modifier;
 	};
 	autonomous();
-
 };
 
 // Draw everything
 var render = function () {	
-
 	ctx.save();
 	// Use the identity matrix while clearing the canvas
 	ctx.setTransform(1, 0, 0, 1, 0, 0);
@@ -146,7 +141,27 @@ var render = function () {
 	ctx.font = "24px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("You: " + sumGoals+", CPU: "+cpuGoals, 0, 0);
+	ctx.fillText("You: " + sumGoals+", CPU: "+cpuGoals, 5, 5);
+
+	if(sumGoals == 10 || cpuGoals == 10) {
+		ctx.fillStyle = "rgba(0, 0, 0, .7)"
+		ctx.beginPath();
+		ctx.rect(0, 0, canvas.width, canvas.height);
+		ctx.closePath();
+		ctx.fill();
+
+		ctx.fillStyle = "rgb(156, 255, 0)";
+		ctx.font = "108px Helvetica";
+		ctx.textAlign = "center";
+		ctx.textBaseline = "top";
+
+		if( sumGoals > cpuGoals) 
+			ctx.fillText("You Won. ", canvas.width, canvas.height - 54);
+		else
+			ctx.fillText("You Lost ", canvas.width/2, canvas.height/2 - 54);
+		
+		window.clearInterval(begin);
+	}
 };
 
 // The main game loop
@@ -162,4 +177,3 @@ var main = function () {
 start();
 var then = Date.now();
 var begin = setInterval(main, 1); 
-
