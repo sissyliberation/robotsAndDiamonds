@@ -70,7 +70,10 @@ var start = function () {
 }
 
 // New goal appears 
-var reset = function () {	
+var reset = function () {
+	if( sumGoals == 10 || cpuGoals == 10) {
+		window.clearInterval(begin);
+	}	
 	goal.x = 32 + (Math.random() * (canvas.width - 64));
 	goal.y = 32 + (Math.random() * (canvas.height - 64));
 };
@@ -158,4 +161,5 @@ var main = function () {
 // Start the game off
 start();
 var then = Date.now();
-setInterval(main, 1); 
+var begin = setInterval(main, 1); 
+
