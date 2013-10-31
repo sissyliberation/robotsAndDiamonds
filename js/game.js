@@ -67,10 +67,36 @@ addEventListener("keyup", function (e) {
 var start = function () {
 	character.x = canvas.width / 2;
 	character.y = 0;
-
 	cpu.x = canvas.width / 2;
 	cpu.y = canvas.height - cpu.height;
+	//getting everything going
+	countdown();
 	reset();
+};
+
+// New goal appears 
+var countdown = function () {
+	ctx.fillStyle = "rgb(156, 255, 0)";
+	ctx.font = "108px Helvetica";
+	ctx.textAlign = "center";
+	ctx.textBaseline = "top";
+	var i = 3;
+
+	var aoeu = setInterval(function() {
+		ctx.save();
+		// Use the identity matrix while clearing the canvas
+		ctx.setTransform(1, 0, 0, 1, 0, 0);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		// Restore the transform
+		ctx.restore();
+
+		if(i > 0)
+			ctx.fillText(i--, canvas.width/2, canvas.height/2 - 54);
+		else {
+			ctx.fillText("Go!", canvas.width/2, canvas.height/2 - 54);
+			window.clearInterval(aoeu);
+		}
+	}, 1000);
 };
 
 // New goal appears 
@@ -100,17 +126,14 @@ var update = function (modifier) {
 	}
 
 	// CPU movement
-	var autonomous = function () {
-		if(cpu.y > goal.y)
-			cpu.y -= cpu.speed * modifier;
-		if(cpu.y < goal.y)
-			cpu.y += cpu.speed * modifier;
-		if(cpu.x > goal.x)
-			cpu.x -= cpu.speed * modifier;
-		if(cpu.x < goal.x)
-			cpu.x += cpu.speed * modifier;
-	};
-	autonomous();
+	if(cpu.y > goal.y)
+		cpu.y -= cpu.speed * modifier;
+	if(cpu.y < goal.y)
+		cpu.y += cpu.speed * modifier;
+	if(cpu.x > goal.x)
+		cpu.x -= cpu.speed * modifier;
+	if(cpu.x < goal.x)
+		cpu.x += cpu.speed * modifier;
 
 	// Collision Detection
 	if (character.x <= (goal.x + character.width) && goal.x <= (character.x + character.width)
@@ -151,6 +174,8 @@ var render = function () {
 	ctx.fillText("You: " + sumGoals+", CPU: "+cpuGoals, 5, 5);
 
 	if(sumGoals == 10 || cpuGoals == 10) {
+		window.clearInterval(begin);
+	
 		ctx.fillStyle = "rgba(0, 0, 0, .7)"
 		ctx.beginPath();
 		ctx.rect(0, 0, canvas.width, canvas.height);
@@ -166,8 +191,6 @@ var render = function () {
 			ctx.fillText("You Won. ", canvas.width, canvas.height - 54);
 		else
 			ctx.fillText("You Lost ", canvas.width/2, canvas.height/2 - 54);
-		
-		window.clearInterval(begin);
 	}
 };
 
@@ -182,5 +205,9 @@ var main = function () {
 
 // Start the game off
 start();
-var then = Date.now();
-var begin = setInterval(main, 1); 
+var then, begin;
+setTimeout(function() {
+	then = Date.now();
+	begin = setInterval(main, 1); 
+}, 5000);
+
