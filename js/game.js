@@ -38,10 +38,14 @@ goalImage.src = "images/diamond.png";
 
 // Game objects
 var character = {
-	speed: 256 // movement in pixels per second
+	speed: 256, // movement in pixels per second
+	width: 32, 
+	height: 32
 };
 var cpu = {
-	speed: 196 // movement in pixels per second
+	speed: 196, // movement in pixels per second
+	width: 32, 
+	height: 32
 };
 
 // goals
@@ -65,7 +69,7 @@ var start = function () {
 	character.y = 0;
 
 	cpu.x = canvas.width / 2;
-	cpu.y = canvas.height - 32;
+	cpu.y = canvas.height - cpu.height;
 	reset();
 };
 
@@ -77,12 +81,13 @@ var reset = function () {
 
 // Update game objects
 var update = function (modifier) {
+	// Player movement
 	if (38 in keysDown) { // Player holding up
 		if(character.y >0)
 			character.y -= character.speed * modifier;
 	}
 	if (40 in keysDown) { // Player holding down
-		if(character.y < canvas.height - 32)
+		if(character.y < canvas.height - character.height)
 			character.y += character.speed * modifier;
 	}
 	if (37 in keysDown) { // Player holding left
@@ -90,21 +95,11 @@ var update = function (modifier) {
 			character.x -= character.speed * modifier;
 	}
 	if (39 in keysDown) { // Player holding right
-		if(character.x < canvas.width - 32)
+		if(character.x < canvas.width - character.width)
 			character.x += character.speed * modifier;
 	}
 
-	// Collision Detection
-	if (character.x <= (goal.x + 32) && goal.x <= (character.x + 32)
-		&& character.y <= (goal.y + 32) && goal.y <= (character.y + 32)) {
-		++sumGoals;
-		reset();
-	}
-	if (cpu.x <= (goal.x + 32) && goal.x <= (cpu.x + 32)
-		&& cpu.y <= (goal.y + 32) && goal.y <= (cpu.y + 32)) {
-		++cpuGoals;
-		reset();
-	}
+	// CPU movement
 	var autonomous = function () {
 		if(cpu.y > goal.y)
 			cpu.y -= cpu.speed * modifier;
@@ -116,6 +111,18 @@ var update = function (modifier) {
 			cpu.x += cpu.speed * modifier;
 	};
 	autonomous();
+
+	// Collision Detection
+	if (character.x <= (goal.x + character.width) && goal.x <= (character.x + character.width)
+		&& character.y <= (goal.y + character.height) && goal.y <= (character.y + character.height)) {
+		++sumGoals;
+		reset();
+	}
+	if (cpu.x <= (goal.x + cpu.width) && goal.x <= (cpu.x + cpu.width)
+		&& cpu.y <= (goal.y + cpu.height) && goal.y <= (cpu.y + cpu.height)) {
+		++cpuGoals;
+		reset();
+	}
 };
 
 // Draw everything
