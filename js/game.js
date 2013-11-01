@@ -38,14 +38,14 @@ goalImage.src = "images/diamond.png";
 
 // Game objects
 var character = {
-	speed: 256, // movement in pixels per second
 	width: 32, 
-	height: 32
+	height: 32,
+	speed: canvas.width / 8 // / character.width // movement in pixels per second
 };
 var cpu = {
-	speed: 192, // movement in pixels per second
 	width: 32, 
-	height: 32
+	height: 32,
+	speed: canvas.width / 8 * .75 // / cpu.width / 1.5 // movement in pixels per second
 };
 
 // goals
