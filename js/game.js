@@ -43,7 +43,7 @@ var character = {
 	height: 32
 };
 var cpu = {
-	speed: 196, // movement in pixels per second
+	speed: 192, // movement in pixels per second
 	width: 32, 
 	height: 32
 };
@@ -188,9 +188,9 @@ var render = function () {
 		ctx.textBaseline = "top";
 
 		if( sumGoals > cpuGoals) 
-			ctx.fillText("You Won. ", canvas.width, canvas.height - 54);
+			ctx.fillText("You Won!", canvas.width/2, canvas.height/2 - 54);
 		else
-			ctx.fillText("You Lost ", canvas.width/2, canvas.height/2 - 54);
+			ctx.fillText("You Lost!", canvas.width/2, canvas.height/2 - 54);
 	}
 };
 
@@ -210,4 +210,3 @@ setTimeout(function() {
 	then = Date.now();
 	begin = setInterval(main, 1); 
 }, 5000);
-
